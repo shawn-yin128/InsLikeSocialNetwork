@@ -1,0 +1,44 @@
+package service
+
+import (
+	"reflect"
+
+	"around/backend"
+	"around/constants"
+	"around/model"
+
+	"github.com/olivere/elastic/v7"
+)
+
+func SearchPostsByUser(user string) ([]model.Post, error) {
+	query := elastic.NewTermQuery("user", user)
+	searchResult, err := backend.ESBackend.ReadFromES(query, constants.POST_INDEX)
+	if err != nil {
+		return nil, err
+	}
+	return getPostFromSearchResult(searchResult), nil
+}
+
+func SearchPostsByKeywords(keywords string) ([]model.Post, error) {
+	query := elastic.NewMatchQuery("message", keywords) // used for keywords search, not exactly match
+	query.Operator("AND")                               // setup how keywords connected. like have few keywords, we want them to be used together or just any of them appeared in the result
+	if keywords == "" {
+		query.ZeroTermsQuery("all") // if no keywords, return all result that could be searched
+	}
+	searchResult, err := backend.ESBackend.ReadFromES(query, constants.POST_INDEX)
+	if err != nil {
+		return nil, err
+	}
+	return getPostFromSearchResult(searchResult), nil
+}
+
+func getPostFromSearchResult(searchResult *elastic.SearchResult) []model.Post {
+	var ptype model.Post
+	var posts []model.Post
+
+	for _, item := range searchResult.Each(reflect.TypeOf(ptype)) { // same as InstanceOf() in java
+		p := item.(model.Post) // cast to post struct, this is different with cast type
+		posts = append(posts, p)
+	}
+	return posts
+}
