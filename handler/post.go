@@ -4,21 +4,60 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"path/filepath"
 
 	"around/model"
 	"around/service"
+
+	"github.com/pborman/uuid"
+)
+
+var (
+	mediaTypes = map[string]string{
+		".jpeg": "image",
+		".jpg":  "image",
+		".gif":  "image",
+		".png":  "image",
+		".mov":  "video",
+		".mp4":  "video",
+		".avi":  "video",
+		".flv":  "video",
+		".wmv":  "video",
+	}
 )
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) { // request uses pointer to save memory cause not copy; ResponseWriter is an interface not a struct, not support pointer
-	// Parse from body of request to get a json object.
 	fmt.Println("Received one upload request")
-	decoder := json.NewDecoder(r.Body)
-	var p model.Post
-	if err := decoder.Decode(&p); err != nil {
-		panic(err)
+
+	p := model.Post{
+		Id:      uuid.New(),
+		User:    r.FormValue("user"),
+		Message: r.FormValue("message"),
 	}
 
-	fmt.Fprintf(w, "Post received: %s\n", p.Message)
+	file, header, err := r.FormFile("media_file")
+	if err != nil {
+		http.Error(w, "Media file is not available", http.StatusBadRequest)
+		fmt.Printf("Media file is not available %v\n", err)
+		return
+	}
+
+	// read suffix to determine which type
+	suffix := filepath.Ext(header.Filename)
+	if t, ok := mediaTypes[suffix]; ok {
+		p.Type = t
+	} else {
+		p.Type = "unknown"
+	}
+
+	err = service.SavePost(&p, file)
+	if err != nil {
+		http.Error(w, "Failed to save post to backend", http.StatusInternalServerError)
+		fmt.Printf("Failed to save post to backend %v\n", err)
+		return
+	}
+
+	fmt.Println("Post is saved successfully.")
 }
 
 func searchHandler(w http.ResponseWriter, r *http.Request) { // go will pack request and response
