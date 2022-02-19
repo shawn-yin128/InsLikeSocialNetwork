@@ -10,6 +10,7 @@ import (
 	"around/service"
 
 	"github.com/pborman/uuid"
+	jwt "github.com/form3tech-oss/jwt-go"
 )
 
 var (
@@ -28,13 +29,16 @@ var (
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) { // request uses pointer to save memory cause not copy; ResponseWriter is an interface not a struct, not support pointer
 	fmt.Println("Received one upload request")
+    user := r.Context().Value("user")
+    claims := user.(*jwt.Token).Claims
+    username := claims.(jwt.MapClaims)["username"]
 
-	p := model.Post{
-		Id:      uuid.New(),
-		User:    r.FormValue("user"),
-		Message: r.FormValue("message"),
-	}
-
+    p := model.Post{
+        Id:      uuid.New(),
+        User:    username.(string),
+        Message: r.FormValue("message"),
+    }
+	
 	file, header, err := r.FormFile("media_file")
 	if err != nil {
 		http.Error(w, "Media file is not available", http.StatusBadRequest)
