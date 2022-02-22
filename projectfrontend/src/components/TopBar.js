@@ -8,8 +8,8 @@ function TopBar(props) {
     return (
         <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
-        <span className="App-title">Around Web</span>
-        {isLoggedIn ? (
+        <span className="App-title">PhotoNet</span>
+        {isLoggedIn ? ( // if login, we show the logout button, otherwise, show nothing
             <LogoutOutlined className="logout" onClick={handleLogout} />
         ) : null}
         </header>

@@ -6,7 +6,7 @@ import { TOKEN_KEY } from "../constants";
 import "../styles/App.css";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState( // first one is state, second one is the function to alter the state
+  const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem(TOKEN_KEY) ? true : false
   );
 
@@ -25,9 +25,8 @@ function App() {
   return (
     <div className="App">
       <TopBar isLoggedIn={isLoggedIn} handleLogout={logout} />
-      <Main />
+      <Main isLoggedIn={isLoggedIn} handleLoggedIn={loggedIn} />
     </div>
   );
 }
-
 export default App;
