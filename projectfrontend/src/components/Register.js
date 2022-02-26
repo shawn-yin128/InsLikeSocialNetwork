@@ -28,7 +28,7 @@ const formItemLayout = {
     },
     };
 
-    function Register(props) {
+function Register(props) {
     const [form] = Form.useForm();
 
     const onFinish = values => {
@@ -44,20 +44,20 @@ const formItemLayout = {
             headers: { 'content-type': 'application/json'}
         };
 
-        axios(opt)
-            .then( response => {
-                console.log(response)
-                // case1: registered success
-                if(response.status === 200) {
-                    message.success('Registration succeed!');
-                    props.history.push('/login');
-                }
-            })
-            .catch( error => {
-                console.log('register failed: ', error.message);
-                message.success('Registration failed!');
-                // throw new Error('Signup Failed!')
-            })
+    axios(opt)
+        .then( response => {
+            console.log(response)
+            // case1: registered success
+            if(response.status === 200) {
+                message.success('Registration succeed!');
+                props.history.push('/login');
+            }
+        })
+        .catch( error => {
+            console.log('register failed: ', error.message);
+            message.success('Registration failed!');
+            // throw new Error('Signup Failed!')
+        })
     };
 
     return (

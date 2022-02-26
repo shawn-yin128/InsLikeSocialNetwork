@@ -10,44 +10,44 @@ function SearchBar(props) {
     const [error, setError] = useState("");
 
     const changeSearchType = (e) => {
-    const searchType = e.target.value;
-    setSearchType(searchType);
-    setError("");
-    // if (searchType === SEARCH_KEY.all) {
-    //   props.handleSearch({ type: searchType, keyword: "" });
-    // }
+        const searchType = e.target.value;
+        setSearchType(searchType);
+        setError("");
+        if (searchType === SEARCH_KEY.all) {
+        props.handleSearch({ type: searchType, keyword: "" });
+        }
     };
 
     const handleSearch = (value) => {
-    if (searchType !== SEARCH_KEY.all && value === "") {
+        if (searchType !== SEARCH_KEY.all && value === "") {
         setError("Please input your search keyword!");
         return;
-    }
-    setError("");
-    // props.handleSearch({ type: searchType, keyword: value });
+        }
+        setError("");
+        props.handleSearch({ type: searchType, keyword: value });
     };
 
     return (
-    <div className="search-bar">
+        <div className="search-bar">
         <Search
-        placeholder="input search text"
-        enterButton="Search"
-        size="large"
-        onSearch={handleSearch}
-        disabled={searchType === SEARCH_KEY.all}
+            placeholder="input search text"
+            enterButton="Search"
+            size="large"
+            onSearch={handleSearch}
+            disabled={searchType === SEARCH_KEY.all}
         />
         <p className="error-msg">{error}</p>
 
         <Radio.Group
-        onChange={changeSearchType}
-        value={searchType}
-        className="search-type-group"
+            onChange={changeSearchType}
+            value={searchType}
+            className="search-type-group"
         >
-        <Radio value={SEARCH_KEY.all}>All</Radio>
-        <Radio value={SEARCH_KEY.keyword}>Keyword</Radio>
-        <Radio value={SEARCH_KEY.user}>User</Radio>
+            <Radio value={SEARCH_KEY.all}>All</Radio>
+            <Radio value={SEARCH_KEY.keyword}>Keyword</Radio>
+            <Radio value={SEARCH_KEY.user}>User</Radio>
         </Radio.Group>
-    </div>
+        </div>
     );
 }
 
