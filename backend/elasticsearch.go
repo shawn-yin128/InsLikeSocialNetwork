@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"around/constants"
+	"around/util"
 
 	"github.com/olivere/elastic/v7"
 )
@@ -17,10 +18,12 @@ type ElasticsearchBackend struct { // =DAO in java
 	client *elastic.Client // same as sessionFactory in java, used to connect db
 }
 
-func InitElasticsearchBackend() {
+func InitElasticsearchBackend(config *util.ElasticsearchInfo) {
 	// new connection client
 	// NewClient(es url, username and password)
-	client, err := elastic.NewClient(elastic.SetURL(constants.ES_URL), elastic.SetBasicAuth(constants.ES_USERNAME, constants.ES_PASSWORD))
+	client, err := elastic.NewClient(
+        elastic.SetURL(config.Address),
+        elastic.SetBasicAuth(config.Username, config.Password))
 	// trace exception
 	if err != nil {
 		panic(err)

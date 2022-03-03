@@ -14,8 +14,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var mySigningKey = []byte("aroundprojectsecret")
-
 func signinHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Received one signin request")
 	w.Header().Set("Content-Type", "text/plain")

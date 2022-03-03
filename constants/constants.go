@@ -3,8 +3,8 @@ package constants
 const (
 	USER_INDEX  = "user"
 	POST_INDEX  = "post"
-	ES_URL      = "http://10.138.0.2:9200"
-	ES_USERNAME = "shawn"
-	ES_PASSWORD = "Yinxy19980128"
-	GCS_BUCKET  = "around-02162022"
+	ES_URL      = "/"
+	ES_USERNAME = "/"
+	ES_PASSWORD = "/"
+	GCS_BUCKET  = "/"
 )
